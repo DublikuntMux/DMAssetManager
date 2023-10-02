@@ -5,10 +5,10 @@
 #include <map>
 #include <stdexcept>
 #include <stdint.h>
+#include <future>
 
 #include "asset.hpp"
 
-#ifdef ENABLE_ENCODER
 class AssetPackerException : public std::runtime_error
 {
 public:
@@ -18,7 +18,7 @@ public:
 class AssetPacker
 {
 public:
-  void AddAsset(const std::string &assetPath);
+  std::future<void> AddAsset(const std::string &assetPath);
   void PackAssets();
 
 private:
@@ -27,4 +27,3 @@ private:
   std::string currentDataFileName = "data_1.bin";
   std::ofstream currentDataFile{ currentDataFileName, std::ios::binary };
 };
-#endif

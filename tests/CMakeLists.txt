@@ -14,7 +14,6 @@ set_target_properties(AssetTests PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(AssetTests PROPERTIES SOVERSION 1)
 
 include(FetchContent)
-
 FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
@@ -22,9 +21,7 @@ FetchContent_Declare(
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
 FetchContent_MakeAvailable(googletest)
-
 enable_testing()
 
 target_link_libraries(AssetTests PRIVATE 

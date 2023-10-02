@@ -4,10 +4,40 @@
 #include <map>
 #include <vector>
 
-#include "compress.hpp"
+#include <brotli/decode.h>
+
 #include "manager.hpp"
 
-#ifdef ENABLE_DECODER
+std::vector<char> decompress(const std::vector<char> &input)
+{
+  std::vector<char> output;
+
+  BrotliDecoderState *state = BrotliDecoderCreateInstance(nullptr, nullptr, nullptr);
+
+  size_t available_in = input.size();
+  const uint8_t *next_in = reinterpret_cast<const uint8_t *>(input.data());
+
+  size_t estimated_output_size = input.size() * 10;
+  output.resize(estimated_output_size);
+
+  size_t available_out = output.size();
+  uint8_t *next_out = reinterpret_cast<uint8_t *>(output.data());
+
+  BrotliDecoderResult result =
+    BrotliDecoderDecompressStream(state, &available_in, &next_in, &available_out, &next_out, nullptr);
+
+  if (result == BROTLI_DECODER_RESULT_SUCCESS) {
+    output.resize(output.size() - available_out);
+  } else {
+    throw AssetMnagerException("Error: Brotli error.");
+    output.clear();
+  }
+
+  BrotliDecoderDestroyInstance(state);
+
+  return output;
+}
+
 void AssetManager::ReadAssetMap(const std::string &filePath)
 {
   std::ifstream binaryFile(filePath, std::ios::binary);
@@ -48,4 +78,5 @@ std::vector<char> AssetManager::GetAsset(const std::string &assetPath)
     throw AssetMnagerException("Error: Asset not found: " + assetPath);
   }
 }
-#endif
+
+std::map<std::string, AssetInfo> AssetManager::GetAssetMap() { return this->assetMap; }

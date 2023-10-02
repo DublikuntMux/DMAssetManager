@@ -3,7 +3,6 @@
 #include <manager.hpp>
 #include <packer.hpp>
 
-
 TEST(AssetPackerTest, AddAssetTest)
 {
   AssetPacker assetPacker;

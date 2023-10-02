@@ -6,7 +6,6 @@
 
 #include "asset.hpp"
 
-#ifdef ENABLE_DECODER
 class AssetMnagerException : public std::runtime_error
 {
 public:
@@ -19,7 +18,8 @@ public:
   void ReadAssetMap(const std::string &filePath);
   std::vector<char> GetAsset(const std::string &assetPath);
 
+  std::map<std::string, AssetInfo> GetAssetMap();
+
 private:
   std::map<std::string, AssetInfo> assetMap;
 };
-#endif

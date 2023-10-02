@@ -1,18 +1,54 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
+#include <future>
 
-#include "compress.hpp"
+#include <brotli/encode.h>
+
 #include "packer.hpp"
 
-#ifdef ENABLE_ENCODER
+std::vector<char> compress(const std::vector<char> &input)
+{
+  std::vector<char> output;
+  size_t output_size = BrotliEncoderMaxCompressedSize(input.size());
+  output.resize(output_size);
+
+  BrotliEncoderState *state = BrotliEncoderCreateInstance(nullptr, nullptr, nullptr);
+  BrotliEncoderSetParameter(state, BROTLI_PARAM_QUALITY, 10);
+
+  size_t available_in = input.size();
+  const uint8_t *next_in = reinterpret_cast<const uint8_t *>(input.data());
+  size_t available_out = output.size();
+  uint8_t *next_out = reinterpret_cast<uint8_t *>(output.data());
+
+  BrotliEncoderCompressStream(
+    state, BROTLI_OPERATION_PROCESS, &available_in, &next_in, &available_out, &next_out, nullptr);
+
+  size_t remaining_out = available_out;
+  BrotliEncoderCompressStream(
+    state, BROTLI_OPERATION_FINISH, &available_in, &next_in, &remaining_out, &next_out, nullptr);
+
+  output.resize(output.size() - remaining_out);
+  BrotliEncoderDestroyInstance(state);
+
+  return output;
+}
+
 void AssetPacker::PackAssets()
 {
+  std::vector<std::pair<std::string, AssetInfo>> sortedMap(assetMap.begin(), assetMap.end());
+
+  std::sort(sortedMap.begin(), sortedMap.end(), [](const auto& a, const auto& b) {
+    return a.second.length < b.second.length;
+  });
+
   try {
     std::ofstream binaryFile("asset_map.bin", std::ios::binary);
     if (!binaryFile.is_open()) { throw AssetPackerException("Error: Unable to create binary asset map file."); }
 
-    for (const auto &entry : assetMap) {
+    for (const auto &entry : sortedMap) {
 
       size_t pathLength = entry.first.size();
       binaryFile.write(reinterpret_cast<const char *>(&pathLength), sizeof(pathLength));
@@ -28,8 +64,9 @@ void AssetPacker::PackAssets()
   }
 }
 
-void AssetPacker::AddAsset(const std::string &assetPath)
+std::future<void> AssetPacker::AddAsset(const std::string &assetPath)
 {
+  return std::async(std::launch::async, [this, assetPath] {
   std::ifstream assetFile(assetPath, std::ios::binary);
   if (!assetFile.is_open()) { throw AssetPackerException("Error: Unable to open asset file: " + assetPath); }
 
@@ -57,5 +94,5 @@ void AssetPacker::AddAsset(const std::string &assetPath)
   currentDataFile.write(compressData.data(), compressData.size());
 
   assetMap[assetPath] = { currentDataFileName, offset, (compressData.size()) };
+  });
 }
-#endif
