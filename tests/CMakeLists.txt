@@ -29,10 +29,10 @@ enable_testing()
 
 target_link_libraries(AssetTests PRIVATE 
         GTest::gtest_main
-        DMAssetServer
+        DMAssetManager
 )
 target_include_directories(AssetTests PRIVATE 
-        DMAssetServer
+        DMAssetManager
 )
 
 include(GoogleTest)

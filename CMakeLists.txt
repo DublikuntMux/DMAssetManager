@@ -40,12 +40,12 @@ if(DMASSET_ENABLE_CACHE)
     enable_cache()
 endif()
 
-add_subdirectory("asset_server")
+add_subdirectory("asset_manager")
 add_subdirectory("tool")
 add_subdirectory("tests")
 
 set_project_warnings(
-    DMAssetServer
+    DMAssetManager
     ${DMASSET_WARNINGS_AS_ERRORS}
     ""
     ""
@@ -67,7 +67,7 @@ set_project_warnings(
 )
 
 enable_sanitizers(
-    DMAssetServer
+    DMAssetManager
     ${DMASSET_ENABLE_SANITIZER_ADDRESS}
     ${DMASSET_ENABLE_SANITIZER_LEAK}
     ${DMASSET_ENABLE_SANITIZER_UNDEFINED}

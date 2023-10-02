@@ -5,7 +5,7 @@
 #include "compress.hpp"
 #include "packer.hpp"
 
-
+#ifdef ENABLE_ENCODER
 void AssetPacker::PackAssets()
 {
   try {
@@ -41,13 +41,9 @@ void AssetPacker::AddAsset(const std::string &assetPath)
   assetFile.read(assetData.data(), assetSize);
   assetFile.close();
 
-#ifdef ENABLE_ENCODER
-  std::vector<char> inData = compress(assetData);
-#else
-  std::vector<char> inData = assetData;
-#endif
+  std::vector<char> compressData = compress(assetData);
 
-  if (currentDataFile.tellp() + static_cast<std::streamsize>(inData.size()) > MAX_DATA_FILE_SIZE) {
+  if (currentDataFile.tellp() + static_cast<std::streamsize>(compressData.size()) > MAX_DATA_FILE_SIZE) {
     currentDataFile.close();
     currentDataFileName = "data_" + std::to_string(assetMap.size() + 1) + ".bin";
     currentDataFile.open(currentDataFileName, std::ios::binary);
@@ -58,7 +54,8 @@ void AssetPacker::AddAsset(const std::string &assetPath)
   }
 
   std::streampos offset = currentDataFile.tellp();
-  currentDataFile.write(inData.data(), inData.size());
+  currentDataFile.write(compressData.data(), compressData.size());
 
-  assetMap[assetPath] = { currentDataFileName, offset, (inData.size()) };
+  assetMap[assetPath] = { currentDataFileName, offset, (compressData.size()) };
 }
+#endif

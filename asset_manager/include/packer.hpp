@@ -8,6 +8,7 @@
 
 #include "asset.hpp"
 
+#ifdef ENABLE_ENCODER
 class AssetPackerException : public std::runtime_error
 {
 public:
@@ -26,3 +27,4 @@ private:
   std::string currentDataFileName = "data_1.bin";
   std::ofstream currentDataFile{ currentDataFileName, std::ios::binary };
 };
+#endif

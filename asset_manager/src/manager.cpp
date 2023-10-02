@@ -7,7 +7,7 @@
 #include "compress.hpp"
 #include "manager.hpp"
 
-
+#ifdef ENABLE_DECODER
 void AssetManager::ReadAssetMap(const std::string &filePath)
 {
   std::ifstream binaryFile(filePath, std::ios::binary);
@@ -42,13 +42,10 @@ std::vector<char> AssetManager::GetAsset(const std::string &assetPath)
     dataFile.read(assetData.data(), info.length);
     dataFile.close();
 
-#ifdef ENABLE_DECODER
     std::vector<char> decompressed = decompress(assetData);
     return decompressed;
-#else
-    return assetData;
-#endif
   } else {
     throw AssetMnagerException("Error: Asset not found: " + assetPath);
   }
 }
+#endif
