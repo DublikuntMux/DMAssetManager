@@ -1,4 +1,3 @@
-#include <cstddef>
 #include <gtest/gtest.h>
 
 #include <manager.hpp>

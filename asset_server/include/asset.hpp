@@ -1,10 +1,11 @@
 #pragma once
 
+#include <cstddef>
 #include <string>
 
 struct AssetInfo
 {
   std::string dataFileName;
   std::streampos offset;
-  std::streamsize length;
+  size_t length;
 };

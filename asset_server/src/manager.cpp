@@ -4,7 +4,9 @@
 #include <map>
 #include <vector>
 
+#include "compress.hpp"
 #include "manager.hpp"
+
 
 void AssetManager::ReadAssetMap(const std::string &filePath)
 {
@@ -40,7 +42,12 @@ std::vector<char> AssetManager::GetAsset(const std::string &assetPath)
     dataFile.read(assetData.data(), info.length);
     dataFile.close();
 
+#ifdef ENABLE_DECODER
+    std::vector<char> decompressed = decompress(assetData);
+    return decompressed;
+#else
     return assetData;
+#endif
   } else {
     throw AssetMnagerException("Error: Asset not found: " + assetPath);
   }
