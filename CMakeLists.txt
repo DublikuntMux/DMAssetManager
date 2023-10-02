@@ -24,6 +24,7 @@ option(DMASSET_ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
 option(DMASSET_ENABLE_SANITIZER_UNDEFINED "Enable undefined sanitizer" OFF)
 option(DMASSET_ENABLE_SANITIZER_THREAD "Enable thread sanitizer" OFF)
 option(DMASSET_ENABLE_SANITIZER_MEMORY "Enable memory sanitizer" OFF)
+
 option(DMASSET_ENABLE_TOOL "Enable packing tool" OFF)
 option(DMASSET_ENABLE_TESTS "Enable tests" OFF)
 
@@ -71,7 +72,7 @@ if(DMASSET_ENABLE_TOOL)
 endif()
 
 if(DMASSET_ENABLE_TESTS)
-    aset_project_warnings(
+    set_project_warnings(
         AssetTests
         ${DMASSET_WARNINGS_AS_ERRORS}
         ""

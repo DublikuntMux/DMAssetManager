@@ -15,18 +15,9 @@ target_include_directories(DMAssetTool PUBLIC include/)
 set_target_properties(DMAssetTool PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(DMAssetTool PROPERTIES SOVERSION 1)
 
-include(FetchContent)
-
-FetchContent_Declare(
-    loguru
-	GIT_REPOSITORY https://github.com/emilk/loguru.git
-	GIT_TAG master
+target_link_libraries(DMAssetTool PRIVATE 
+        DMAssetManager
 )
-
-set(LOGURU_WITH_STREAMS ON CACHE BOOL "" FORCE)
-
-FetchContent_MakeAvailable(loguru)
-
-target_link_libraries(DMAssetTool PUBLIC 
-    loguru::loguru
+target_include_directories(DMAssetTool PRIVATE 
+        DMAssetManager
 )
