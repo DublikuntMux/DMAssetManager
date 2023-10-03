@@ -2,8 +2,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <future>
 
 #include <brotli/encode.h>
 
@@ -38,17 +36,11 @@ std::vector<char> compress(const std::vector<char> &input)
 
 void AssetPacker::PackAssets()
 {
-  std::vector<std::pair<std::string, AssetInfo>> sortedMap(assetMap.begin(), assetMap.end());
-
-  std::sort(sortedMap.begin(), sortedMap.end(), [](const auto& a, const auto& b) {
-    return a.second.length < b.second.length;
-  });
-
   try {
     std::ofstream binaryFile("asset_map.bin", std::ios::binary);
     if (!binaryFile.is_open()) { throw AssetPackerException("Error: Unable to create binary asset map file."); }
 
-    for (const auto &entry : sortedMap) {
+    for (const auto &entry : assetMap) {
 
       size_t pathLength = entry.first.size();
       binaryFile.write(reinterpret_cast<const char *>(&pathLength), sizeof(pathLength));
