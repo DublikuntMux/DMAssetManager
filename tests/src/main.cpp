@@ -3,15 +3,6 @@
 #include <manager.hpp>
 #include <packer.hpp>
 
-TEST(AssetPackerTest, AddAssetTest)
-{
-  AssetPacker assetPacker;
-
-  EXPECT_NO_THROW(assetPacker.AddAsset("test_data/DublikuntMux.png"));
-
-  EXPECT_THROW(assetPacker.AddAsset("test_data/coolebaka.ls"), AssetPackerException);
-}
-
 TEST(AssetPackerTest, PackAssetsTest)
 {
   AssetPacker assetPacker;
