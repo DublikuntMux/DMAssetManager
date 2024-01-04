@@ -6,10 +6,10 @@
 
 #include "asset.hpp"
 
-class AssetMnagerException : public std::runtime_error
+class AssetManagerException : public std::runtime_error
 {
 public:
-  AssetMnagerException(const std::string &message) : std::runtime_error(message) {}
+  explicit AssetManagerException(const std::string &message) : std::runtime_error(message) {}
 };
 
 class AssetManager

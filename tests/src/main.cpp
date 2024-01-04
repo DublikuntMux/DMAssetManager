@@ -19,7 +19,7 @@ TEST(AssetManagerTest, ReadAssetMapTest)
 
   EXPECT_NO_THROW(assetManager.ReadAssetMap("asset_map.bin"));
 
-  EXPECT_THROW(assetManager.ReadAssetMap("asset_not_map.bin"), AssetMnagerException);
+  EXPECT_THROW(assetManager.ReadAssetMap("asset_not_map.bin"), AssetManagerException);
 }
 
 TEST(AssetManagerTest, GetAssetTest)
@@ -39,5 +39,5 @@ TEST(AssetManagerTest, GetAssetTest)
 
   EXPECT_EQ(assetManager.GetAsset("test_data/pig.png"), assetData);
 
-  EXPECT_THROW(assetManager.GetAsset("test_data/coolebaka.ls"), AssetMnagerException);
+  EXPECT_THROW(assetManager.GetAsset("test_data/coolebaka.ls"), AssetManagerException);
 }

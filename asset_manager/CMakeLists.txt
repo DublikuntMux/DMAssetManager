@@ -1,11 +1,3 @@
-cmake_minimum_required(VERSION 3.25.0)
-
-project(DMAssetManager
-        VERSION 1.0.1
-        DESCRIPTION "Dublikunt asset manager"
-        LANGUAGES CXX
-)
-
 option(DMASSET_ENABLE_ENCODER "Enable asset encoding" ON)
 option(DMASSET_ENABLE_DECODER "Enable asset decoding" ON)
 
@@ -33,16 +25,23 @@ target_include_directories(DMAssetManager PUBLIC include/)
 set_target_properties(DMAssetManager PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(DMAssetManager PROPERTIES SOVERSION 1)
 
-if(DMASSET_ENABLE_ENCODER)
-        find_package(unofficial-brotli CONFIG REQUIRED)
-elseif(DMASSET_ENABLE_DECODER)
-        find_package(unofficial-brotli CONFIG REQUIRED)
-endif()
+FetchContent_Declare(
+        brotl
+        GIT_REPOSITORY https://github.com/google/brotli.git
+        GIT_TAG master
+)
+
+set(BROTLI_DISABLE_TESTS ON CACHE BOOL "" FORCE)
+set(BROTLI_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(brotl)
+
+target_link_libraries(DMAssetManager PRIVATE brotlicommon) 
 
 if(DMASSET_ENABLE_ENCODER)
-        target_link_libraries(DMAssetManager PRIVATE unofficial::brotli::brotlidec) 
+        target_link_libraries(DMAssetManager PRIVATE brotlidec) 
 endif()
 
 if(DMASSET_ENABLE_DECODER)
-        target_link_libraries(DMAssetManager PRIVATE unofficial::brotli::brotlienc)   
+        target_link_libraries(DMAssetManager PRIVATE brotlienc)   
 endif()

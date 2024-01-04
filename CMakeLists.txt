@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25.0)
-project(DMAsset
+
+project(DMAssetManager
         VERSION 1.0.1
+        DESCRIPTION "Dublikunt asset manager"
         LANGUAGES CXX
 )
 
@@ -10,6 +12,8 @@ if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
       "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there."
   )
 endif()
+
+include(FetchContent)
 
 include("cmake/Cache.cmake")
 include("cmake/CompilerWarnings.cmake")
@@ -25,13 +29,11 @@ option(DMASSET_ENABLE_SANITIZER_UNDEFINED "Enable undefined sanitizer" OFF)
 option(DMASSET_ENABLE_SANITIZER_THREAD "Enable thread sanitizer" OFF)
 option(DMASSET_ENABLE_SANITIZER_MEMORY "Enable memory sanitizer" OFF)
 
-option(DMASSET_ENABLE_TOOL "Enable packing tool" OFF)
-option(DMASSET_ENABLE_TESTS "Enable tests" OFF)
+option(DMASSET_ENABLE_TOOL "Enable packing tool" ON)
+option(DMASSET_ENABLE_TESTS "Enable tests" ON)
 
-if (NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
-
+set(CMAKE_CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 

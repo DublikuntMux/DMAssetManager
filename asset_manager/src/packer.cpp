@@ -17,9 +17,9 @@ std::vector<char> compress(const std::vector<char> &input)
   BrotliEncoderSetParameter(state, BROTLI_PARAM_QUALITY, 10);
 
   size_t available_in = input.size();
-  const uint8_t *next_in = reinterpret_cast<const uint8_t *>(input.data());
+  const auto *next_in = reinterpret_cast<const uint8_t *>(input.data());
   size_t available_out = output.size();
-  uint8_t *next_out = reinterpret_cast<uint8_t *>(output.data());
+  auto *next_out = reinterpret_cast<uint8_t *>(output.data());
 
   BrotliEncoderCompressStream(
     state, BROTLI_OPERATION_PROCESS, &available_in, &next_in, &available_out, &next_out, nullptr);

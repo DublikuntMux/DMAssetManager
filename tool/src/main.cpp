@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
           const AssetInfo &assetInfo = pair.second;
 
           std::ifstream dataFile(assetInfo.dataFileName, std::ios::binary);
-          if (!dataFile) { throw AssetMnagerException("Failed to open asset data file: " + assetInfo.dataFileName); }
+          if (!dataFile) { throw AssetManagerException("Failed to open asset data file: " + assetInfo.dataFileName); }
 
           dataFile.seekg(assetInfo.offset);
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
           dataFile.read(data.data(), assetInfo.length);
 
           std::ofstream outputFile("./" + assetPath, std::ios::binary);
-          if (!outputFile) { throw AssetMnagerException("Failed to open output file: ./" + assetPath); }
+          if (!outputFile) { throw AssetManagerException("Failed to open output file: ./" + assetPath); }
           outputFile.write(data.data(), data.size());
         }
       } else {

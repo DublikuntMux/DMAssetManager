@@ -1,6 +1,4 @@
-#include <cstddef>
 #include <fstream>
-#include <iostream>
 #include <map>
 #include <vector>
 
@@ -15,13 +13,13 @@ std::vector<char> decompress(const std::vector<char> &input)
   BrotliDecoderState *state = BrotliDecoderCreateInstance(nullptr, nullptr, nullptr);
 
   size_t available_in = input.size();
-  const uint8_t *next_in = reinterpret_cast<const uint8_t *>(input.data());
+  const auto *next_in = reinterpret_cast<const uint8_t *>(input.data());
 
   size_t estimated_output_size = input.size() * 10;
   output.resize(estimated_output_size);
 
   size_t available_out = output.size();
-  uint8_t *next_out = reinterpret_cast<uint8_t *>(output.data());
+  auto *next_out = reinterpret_cast<uint8_t *>(output.data());
 
   BrotliDecoderResult result =
     BrotliDecoderDecompressStream(state, &available_in, &next_in, &available_out, &next_out, nullptr);
@@ -29,8 +27,8 @@ std::vector<char> decompress(const std::vector<char> &input)
   if (result == BROTLI_DECODER_RESULT_SUCCESS) {
     output.resize(output.size() - available_out);
   } else {
-    throw AssetMnagerException("Error: Brotli error.");
     output.clear();
+    throw AssetManagerException("Error: Brotli error.");
   }
 
   BrotliDecoderDestroyInstance(state);
@@ -41,7 +39,7 @@ std::vector<char> decompress(const std::vector<char> &input)
 void AssetManager::ReadAssetMap(const std::string &filePath)
 {
   std::ifstream binaryFile(filePath, std::ios::binary);
-  if (!binaryFile.is_open()) { throw AssetMnagerException("Error: Unable to open asset map file: " + filePath); }
+  if (!binaryFile.is_open()) { throw AssetManagerException("Error: Unable to open asset map file: " + filePath); }
 
   while (!binaryFile.eof()) {
     size_t pathLength;
@@ -65,7 +63,7 @@ std::vector<char> AssetManager::GetAsset(const std::string &assetPath)
     const auto &info = assetMap.at(assetPath);
 
     std::ifstream dataFile(info.dataFileName, std::ios::binary);
-    if (!dataFile.is_open()) { throw AssetMnagerException("Error: Unable to open data file: " + info.dataFileName); }
+    if (!dataFile.is_open()) { throw AssetManagerException("Error: Unable to open data file: " + info.dataFileName); }
 
     std::vector<char> assetData(info.length);
     dataFile.seekg(info.offset);
@@ -75,7 +73,7 @@ std::vector<char> AssetManager::GetAsset(const std::string &assetPath)
     std::vector<char> decompressed = decompress(assetData);
     return decompressed;
   } else {
-    throw AssetMnagerException("Error: Asset not found: " + assetPath);
+    throw AssetManagerException("Error: Asset not found: " + assetPath);
   }
 }
 

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <map>
 #include <stdexcept>
-#include <stdint.h>
+#include <cstdint>
 #include <future>
 
 #include "asset.hpp"
@@ -12,7 +12,7 @@
 class AssetPackerException : public std::runtime_error
 {
 public:
-  AssetPackerException(const std::string &message) : std::runtime_error(message) {}
+  explicit AssetPackerException(const std::string &message) : std::runtime_error(message) {}
 };
 
 class AssetPacker
